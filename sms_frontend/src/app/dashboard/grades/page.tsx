@@ -80,6 +80,22 @@ export default function GradesPage() {
         }
     };
 
+    const handleBatchGenerate = async () => {
+        setLoading(true);
+        setMessage({ text: "Compiling system term reports... Please wait.", type: "success" });
+        try {
+            for (const student of students) {
+                await api.post(`/grades/generate-term-report/${student.id}`, { term });
+            }
+            setMessage({ text: "Successfully archived terminal reports to the Document Vault.", type: "success" });
+        } catch (err: unknown) {
+            const errorObj = err as { response?: { data?: { message?: string } } };
+            setMessage({ text: errorObj.response?.data?.message || "Failed to batch generate reports.", type: "error" });
+        } finally {
+            setLoading(false);
+        }
+    };
+
     return (
         <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -201,6 +217,22 @@ export default function GradesPage() {
                             </div>
                         )}
                     </div>
+                </div>
+
+                {/* Batch Report Generation */}
+                <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden flex flex-col p-6 mt-6 lg:mt-0 lg:col-start-3">
+                    <h3 className="font-semibold text-lg text-oxford-dark flex items-center mb-2">
+                        <BookOpen className="w-5 h-5 mr-2 text-oxford-accent" />
+                        Automated Reporting
+                    </h3>
+                    <p className="text-sm text-gray-500 mb-6 flex-1">Class Teachers: Compile all subject grades across the term natively into the Document Vault securely protecting final outputs.</p>
+                    <button
+                        onClick={handleBatchGenerate}
+                        disabled={loading || students.length === 0}
+                        className="w-full py-2.5 bg-oxford-dark text-white font-medium rounded-lg shadow-sm hover:bg-oxford-light transition-colors disabled:opacity-50"
+                    >
+                        {loading ? 'Processing Array...' : 'Batch Generate Term Reports'}
+                    </button>
                 </div>
 
             </div>

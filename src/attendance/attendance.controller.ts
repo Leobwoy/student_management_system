@@ -14,13 +14,13 @@ import { Role } from '../users/enums/role.enum';
 export class AttendanceController {
     constructor(private readonly attendanceService: AttendanceService) { }
 
-    @Roles(Role.ADMIN, Role.TEACHER)
+    @Roles(Role.ADMIN, Role.SUPERUSER, Role.CLASS_TEACHER, Role.SUBJECT_TEACHER)
     @Post()
     recordBatch(@Body() recordAttendanceDto: RecordAttendanceDto) {
         return this.attendanceService.recordBatch(recordAttendanceDto);
     }
 
-    @Roles(Role.ADMIN, Role.TEACHER)
+    @Roles(Role.ADMIN, Role.SUPERUSER, Role.CLASS_TEACHER, Role.SUBJECT_TEACHER)
     @Get('course/:courseId')
     findByCourseAndDate(
         @Param('courseId') courseId: string,

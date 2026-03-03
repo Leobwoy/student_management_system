@@ -8,17 +8,22 @@ import {
     UseInterceptors,
     UploadedFile,
     Query,
-    Request
+    Request,
+    Res
 } from '@nestjs/common';
+import type { Response } from 'express';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { DocumentsService } from './documents.service';
 import { UploadDocumentMetadataDto } from './dto/upload-document-metadata.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { Roles } from '../auth/decorators/roles.decorator';
+import { Role } from '../users/enums/role.enum';
+import { RolesGuard } from '../auth/guards/roles.guard';
 
 @ApiBearerAuth()
 @ApiTags('Documents')
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, RolesGuard)
 @Controller('documents')
 export class DocumentsController {
     constructor(private readonly documentsService: DocumentsService) { }
@@ -37,8 +42,18 @@ export class DocumentsController {
     }
 
     @Get('search')
-    search(@Query('title') title?: string, @Query('department') department?: string) {
-        return this.documentsService.search({ title, department });
+    search(@Query('title') title?: string, @Query('department') department?: string, @Request() req?: any) {
+        return this.documentsService.search({ title, department }, req.user);
+    }
+
+    @Roles(Role.ADMIN, Role.SUPERUSER, Role.CLASS_TEACHER)
+    @Get('batch-download/:classGroupId')
+    async batchDownload(
+        @Param('classGroupId') classGroupId: string,
+        @Query('term') term: string,
+        @Res() res: Response
+    ) {
+        return this.documentsService.batchDownload(classGroupId, term, res);
     }
 
     @Get(':id')

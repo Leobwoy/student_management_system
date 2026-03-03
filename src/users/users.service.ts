@@ -16,5 +16,13 @@ export class UsersService {
         return this.usersRepository.findOne({ where: { email } });
     }
 
-    // Other CRUD methods can be added here...
+    async findOneById(id: string): Promise<User | null> {
+        return this.usersRepository.findOne({ where: { id } });
+    }
+
+    async updateProfile(id: string, updateData: Partial<User>): Promise<User | null> {
+        this.logger.log(`Updating profile for user: ${id}`);
+        await this.usersRepository.update(id, updateData);
+        return this.findOneById(id);
+    }
 }

@@ -54,15 +54,60 @@ export default function Sidebar() {
     };
 
     const navLinks = [
-        { name: "Overview", href: "/dashboard", icon: <Home className="w-5 h-5" />, roles: ["ADMIN", "TEACHER", "STAFF"] },
-        { name: "Students", href: "/dashboard/students", icon: <Users className="w-5 h-5" />, roles: ["ADMIN", "TEACHER", "STAFF"] },
-        { name: "Courses", href: "/dashboard/courses", icon: <BookOpen className="w-5 h-5" />, roles: ["ADMIN", "TEACHER"] },
-        { name: "Attendance", href: "/dashboard/attendance", icon: <CheckCircle className="w-5 h-5" />, roles: ["ADMIN", "TEACHER"] },
-        { name: "Grades", href: "/dashboard/grades", icon: <GraduationCap className="w-5 h-5" />, roles: ["ADMIN", "TEACHER"] },
-        { name: "Documents", href: "/dashboard/documents", icon: <FileText className="w-5 h-5" />, roles: ["ADMIN", "TEACHER", "STAFF"] },
-        { name: "Analytics", href: "/dashboard/analytics", icon: <BarChart className="w-5 h-5" />, roles: ["ADMIN"] },
-        { name: "Notifications", href: "/dashboard/notifications", icon: <Bell className="w-5 h-5" />, roles: ["ADMIN", "TEACHER", "STAFF"] },
-        { name: "System Health", href: "/dashboard/health", icon: <Activity className="w-5 h-5" />, roles: ["ADMIN"] },
+        {
+            name: "Overview",
+            href: "/dashboard",
+            icon: <Home className="w-5 h-5" />,
+            roles: ["SUPERUSER", "ADMIN", "CLASS_TEACHER", "SUBJECT_TEACHER"],
+        },
+        {
+            name: "Students",
+            href: "/dashboard/students",
+            icon: <Users className="w-5 h-5" />,
+            roles: ["SUPERUSER", "ADMIN", "CLASS_TEACHER", "SUBJECT_TEACHER"],
+        },
+        {
+            name: "Courses",
+            href: "/dashboard/courses",
+            icon: <BookOpen className="w-5 h-5" />,
+            roles: ["SUPERUSER", "ADMIN", "CLASS_TEACHER", "SUBJECT_TEACHER"],
+        },
+        {
+            name: "Attendance",
+            href: "/dashboard/attendance",
+            icon: <CheckCircle className="w-5 h-5" />,
+            roles: ["SUPERUSER", "ADMIN", "CLASS_TEACHER", "SUBJECT_TEACHER"],
+        },
+        {
+            name: "Grades",
+            href: "/dashboard/grades",
+            icon: <GraduationCap className="w-5 h-5" />,
+            roles: ["SUPERUSER", "ADMIN", "CLASS_TEACHER", "SUBJECT_TEACHER"],
+        },
+        {
+            name: "Documents",
+            href: "/dashboard/documents",
+            icon: <FileText className="w-5 h-5" />,
+            roles: ["SUPERUSER", "ADMIN", "CLASS_TEACHER", "SUBJECT_TEACHER"],
+        },
+        {
+            name: "Analytics",
+            href: "/dashboard/analytics",
+            icon: <BarChart className="w-5 h-5" />,
+            roles: ["SUPERUSER", "ADMIN"],
+        },
+        {
+            name: "Notifications",
+            href: "/dashboard/notifications",
+            icon: <Bell className="w-5 h-5" />,
+            roles: ["SUPERUSER", "ADMIN", "CLASS_TEACHER", "SUBJECT_TEACHER"],
+        },
+        {
+            name: "System Health",
+            href: "/dashboard/health",
+            icon: <Activity className="w-5 h-5" />,
+            roles: ["SUPERUSER", "ADMIN"],
+        },
     ];
 
     const filteredLinks = mounted ? navLinks.filter(link => role && link.roles.includes(role)) : [];

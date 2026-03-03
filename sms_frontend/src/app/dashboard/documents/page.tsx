@@ -59,10 +59,12 @@ export default function DocumentVaultPage() {
     const fetchDocuments = async () => {
         try {
             if (searchTerm.length >= 3) {
-                const res = await api.get(`/documents/search?query=${searchTerm}`);
+                const res = await api.get("/documents/search", {
+                    params: { title: searchTerm },
+                });
                 setDocuments(res.data);
             } else if (searchTerm.length === 0) {
-                const res = await api.get("/documents/search?query="); // empty query returns all
+                const res = await api.get("/documents/search");
                 setDocuments(res.data);
             }
         } catch (err) {
@@ -119,7 +121,8 @@ export default function DocumentVaultPage() {
         window.alert(`Downloading: ${doc.title} (v${doc.version})`);
     };
 
-    const canUpload = userRole === "ADMIN" || userRole === "TEACHER";
+    const normalizedRole = userRole?.toUpperCase();
+    const canUpload = normalizedRole === "ADMIN" || normalizedRole === "SUPERUSER" || normalizedRole === "CLASS_TEACHER" || normalizedRole === "SUBJECT_TEACHER";
 
     return (
         <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">

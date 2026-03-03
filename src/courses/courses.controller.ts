@@ -16,7 +16,7 @@ import { Role } from '../users/enums/role.enum';
 export class CoursesController {
     constructor(private readonly coursesService: CoursesService) { }
 
-    @Roles(Role.ADMIN, Role.TEACHER)
+    @Roles(Role.ADMIN, Role.SUPERUSER, Role.CLASS_TEACHER, Role.SUBJECT_TEACHER)
     @Post()
     create(@Body() createCourseDto: CreateCourseDto) {
         return this.coursesService.create(createCourseDto);
@@ -32,19 +32,19 @@ export class CoursesController {
         return this.coursesService.findOne(id);
     }
 
-    @Roles(Role.ADMIN, Role.TEACHER)
+    @Roles(Role.ADMIN, Role.SUPERUSER, Role.CLASS_TEACHER, Role.SUBJECT_TEACHER)
     @Patch(':id')
     update(@Param('id') id: string, @Body() updateCourseDto: UpdateCourseDto) {
         return this.coursesService.update(id, updateCourseDto);
     }
 
-    @Roles(Role.ADMIN, Role.TEACHER)
+    @Roles(Role.ADMIN, Role.SUPERUSER, Role.CLASS_TEACHER, Role.SUBJECT_TEACHER)
     @Delete(':id')
     remove(@Param('id') id: string) {
         return this.coursesService.remove(id);
     }
 
-    @Roles(Role.ADMIN, Role.TEACHER)
+    @Roles(Role.ADMIN, Role.SUPERUSER, Role.CLASS_TEACHER, Role.SUBJECT_TEACHER)
     @Post(':id/enroll')
     enrollStudent(@Param('id') id: string, @Body() enrollStudentDto: EnrollStudentDto) {
         return this.coursesService.enrollStudent(id, enrollStudentDto.studentId);

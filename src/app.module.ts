@@ -15,11 +15,33 @@ import { AnalyticsModule } from './analytics/analytics.module';
 import { NotificationsModule } from './notifications/notifications.module';
 import { TasksModule } from './tasks/tasks.module';
 import { HealthModule } from './health/health.module';
+import { AcademicModule } from './academic/academic.module';
+import { IamModule } from './iam/iam.module';
+import { TenancyModule } from './tenancy/tenancy.module';
+import { REGISTRY_DATA_SOURCE_NAME } from './tenancy/tenancy.constants';
+import { SchoolTenant } from './tenancy/registry/entities/school-tenant.entity';
+import { SchoolBranding } from './tenancy/registry/entities/school-branding.entity';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
+    }),
+    // Registry DB: stores tenants + branding/settings (multi-tenant control plane)
+    TypeOrmModule.forRootAsync({
+      name: REGISTRY_DATA_SOURCE_NAME,
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        type: 'postgres',
+        host: configService.getOrThrow<string>('REGISTRY_DB_HOST'),
+        port: configService.getOrThrow<number>('REGISTRY_DB_PORT'),
+        username: configService.getOrThrow<string>('REGISTRY_DB_USERNAME'),
+        password: configService.getOrThrow<string>('REGISTRY_DB_PASSWORD'),
+        database: configService.getOrThrow<string>('REGISTRY_DB_DATABASE'),
+        entities: [SchoolTenant, SchoolBranding],
+        synchronize: true, // TODO (Phase 0): migrate to migrations
+      }),
     }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
@@ -36,6 +58,7 @@ import { HealthModule } from './health/health.module';
       }),
     }),
     ScheduleModule.forRoot(),
+    TenancyModule,
     AuthModule,
     UsersModule,
     StudentsModule,
@@ -47,6 +70,8 @@ import { HealthModule } from './health/health.module';
     NotificationsModule,
     TasksModule,
     HealthModule,
+    AcademicModule,
+    IamModule,
   ],
   controllers: [AppController],
   providers: [AppService],

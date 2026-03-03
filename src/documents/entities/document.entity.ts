@@ -1,5 +1,7 @@
 import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 import { User } from '../../users/entities/user.entity';
+import { Student } from '../../students/entities/student.entity';
+import { ClassGroup } from '../../academic/entities/class-group.entity';
 
 @Entity('documents')
 export class Document {
@@ -32,6 +34,15 @@ export class Document {
 
     @ManyToOne(() => User, user => user.documents)
     uploader: User;
+
+    @ManyToOne(() => Student, student => student.documents, { nullable: true })
+    student: Student;
+
+    @ManyToOne(() => ClassGroup, { nullable: true })
+    classGroup: ClassGroup;
+
+    @Column({ nullable: true })
+    documentType: string;
 
     @CreateDateColumn()
     uploadedAt: Date;
